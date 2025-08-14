@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer in the Field</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 900px;
+            height: 600px;
+            background: linear-gradient(to bottom, #4CAF50 60%, #8BC34A 60%, #7CB342 80%, #5D4037 80%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(76, 175, 80, 0.8);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Sky elements */
+        .sun {
+            position: absolute;
+            top: 60px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            background: #FFEB3B;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #FFC107, 0 0 80px #FF9800;
+            animation: sun-move 20s infinite linear;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            filter: blur(1px);
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .cloud-1 {
+            top: 50px;
+            left: 50px;
+            width: 100px;
+            height: 40px;
+            animation: float 25s linear infinite;
+        }
+
+        .cloud-1::before {
+            width: 50px;
+            height: 50px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud-1::after {
+            width: 70px;
+            height: 70px;
+            top: -30px;
+            left: 45px;
+        }
+
+        .cloud-2 {
+            top: 120px;
+            right: 200px;
+            width: 150px;
+            height: 50px;
+            animation: float 30s linear infinite reverse;
+        }
+
+        .cloud-2::before {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 20px;
+        }
+
+        .cloud-2::after {
+            width: 80px;
+            height: 80px;
+            top: -35px;
+            left: 60px;
+        }
+
+        /* Farmer and field elements */
+        .field {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: #5D4037;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .farmer-container {
+            position: absolute;
+            bottom: 200px;
+            left: 200px;
+            z-index: 5;
+            animation: farmer-move 15s infinite linear;
+        }
+
+        .farmer {
+            position: relative;
+            width: 120px;
+            height: 200px;
+        }
+
+        /* Farmer body parts */
+        .head {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            top: 0;
+            left: 35px;
+            z-index: 2;
+        }
+
+        .body {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: #2196F3;
+            top: 45px;
+            left: 30px;
+            border-radius: 10px;
+        }
+
+        .arm {
+            position: absolute;
+            background: #2196F3;
+            z-index: 1;
+        }
+
+        .arm-left {
+            width: 15px;
+            height: 60px;
+            top: 50px;
+            left: 20px;
+            transform-origin: top;
+            animation: arm-swing-left 2s infinite ease-in-out;
+        }
+
+        .arm-right {
+            width: 15px;
+            height: 60px;
+            top: 50px;
+            left: 85px;
+            transform-origin: top;
+            animation: arm-swing-right 2s infinite ease-in-out;
+        }
+
+        .leg {
+            position: absolute;
+            background: #1565C0;
+            width: 15px;
+            height: 70px;
+            top: 120px;
+        }
+
+        .leg-left {
+            left: 45px;
+            animation: leg-move-left 3s infinite ease-in-out;
+        }
+
+        .leg-right {
+            left: 60px;
+            animation: leg-move-right 3s infinite ease-in-out;
+        }
+
+        .hat {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: #795548;
+            border-radius: 50%;
+            top: -10px;
+            left: 25px;
+            z-index: 3;
+        }
+
+        .hat-top {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #795548;
+            top: -20px;
+            left: 50px;
+            border-radius: 50%;
+        }
+
+        /* Farming elements */
+        .plow {
+            position: absolute;
+            width: 80px;
+            height: 10px;
+            background: #795548;
+            top: 130px;
+            left: 10px;
+            z-index: 0;
+            transform-origin: left;
+            animation: plow-move 2s infinite ease-in-out;
+        }
+
+        .crops {
+            position: absolute;
+            bottom: 120px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .crop {
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to top, #388E3C, #8BC34A);
+            position: relative;
+            margin: 0 10px;
+            animation: crop-grow 8s infinite;
+            transform-origin: bottom;
+        }
+
+        .crop::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #4CAF50;
+            border-radius: 50%;
+            top: -15px;
+            left: 5px;
+        }
+
+        /* Info and controls */
+        .info-panel {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px 20px;
+            border-radius: 15px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-panel h3 {
+            color: #2E7D32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: #FF9800;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #F57C00;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Animations */
+        @keyframes sun-move {
+            0% { transform: translateX(0) rotate(0); }
+            50% { transform: translateX(-100px) rotate(180deg); }
+            100% { transform: translateX(0) rotate(360deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes farmer-move {
+            0% { left: 150px; }
+            50% { left: 650px; }
+            100% { left: 150px; }
+        }
+
+        @keyframes arm-swing-left {
+            0% { transform: rotate(20deg); }
+            50% { transform: rotate(-40deg); }
+            100% { transform: rotate(20deg); }
+        }
+
+        @keyframes arm-swing-right {
+            0% { transform: rotate(-30deg); }
+            50% { transform: rotate(30deg); }
+            100% { transform: rotate(-30deg); }
+        }
+
+        @keyframes leg-move-left {
+            0% { transform: rotate(0); }
+            50% { transform: rotate(15deg); }
+            100% { transform: rotate(0); }
+        }
+
+        @keyframes leg-move-right {
+            0% { transform: rotate(0); }
+            50% { transform: rotate(-15deg); }
+            100% { transform: rotate(0); }
+        }
+
+        @keyframes plow-move {
+            0% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+
+        @keyframes crop-grow {
+            0% { transform: scaleY(0.2); opacity: 0.5; }
+            50% { transform: scaleY(1); opacity: 1; }
+            100% { transform: scaleY(0.2); opacity: 0.5; }
+        }
+
+        /* Birds animation */
+        .birds {
+            position: absolute;
+            top: 150px;
+            left: 0;
+            width: 100%;
+        }
+
+        .bird {
+            position: absolute;
+            color: #333;
+            font-size: 2rem;
+            animation: bird-fly 20s linear infinite;
+        }
+
+        @keyframes bird-fly {
+            0% { left: -50px; }
+            100% { left: 1000px; }
+        }
+
+        /* Stats */
+        .stats {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 15px;
+            border-radius: 15px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tractor"></i> Farmer in the Field</h1>
+            <p>A CSS animation showing a farmer working hard in the field</p>
+        </div>
+
+        <div class="sun"></div>
+        
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        
+        <div class="birds">
+            <div class="bird" style="top: 20px; animation-delay: 0s;"><i class="fas fa-dove"></i></div>
+            <div class="bird" style="top: 50px; animation-delay: 3s;"><i class="fas fa-dove"></i></div>
+            <div class="bird" style="top: 80px; animation-delay: 6s;"><i class="fas fa-dove"></i></div>
+        </div>
+        
+        <div class="crops">
+            <div class="crop" style="animation-delay: 0s;"></div>
+            <div class="crop" style="animation-delay: 1s;"></div>
+            <div class="crop" style="animation-delay: 2s;"></div>
+            <div class="crop" style="animation-delay: 3s;"></div>
+            <div class="crop" style="animation-delay: 4s;"></div>
+            <div class="crop" style="animation-delay: 5s;"></div>
+            <div class="crop" style="animation-delay: 6s;"></div>
+            <div class="crop" style="animation-delay: 7s;"></div>
+        </div>
+        
+        <div class="farmer-container">
+            <div class="farmer">
+                <div class="head"></div>
+                <div class="hat"></div>
+                <div class="hat-top"></div>
+                <div class="body"></div>
+                <div class="arm arm-left"></div>
+                <div class="arm arm-right"></div>
+                <div class="leg leg-left"></div>
+                <div class="leg leg-right"></div>
+                <div class="plow"></div>
+            </div>
+        </div>
+        
+        <div class="field"></div>
+        
+        <div class="stats">
+            <h3><i class="fas fa-chart-line"></i> Farm Stats</h3>
+            <div class="stat-item">
+                <span>Field Size:</span>
+                <span class="stat-value">5 Acres</span>
+            </div>
+            <div class="stat-item">
+                <span>Crop Type:</span>
+                <span class="stat-value">Wheat</span>
+            </div>
+            <div class="stat-item">
+                <span>Harvest:</span>
+                <span class="stat-value">85%</span>
+            </div>
+            <div class="stat-item">
+                <span>Soil Quality:</span>
+                <span class="stat-value">Excellent</span>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h3><i class="fas fa-info-circle"></i> About Indian Farmers</h3>
+            <p>Indian farmers are the backbone of the nation, producing food for 1.4 billion people. They work tirelessly in all weather conditions to ensure food security for the country.</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="day-btn">
+                <i class="fas fa-sun"></i> Day Mode
+            </button>
+            <button class="btn" id="night-btn">
+                <i class="fas fa-moon"></i> Night Mode
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Day/Night mode toggle
+        const dayBtn = document.getElementById('day-btn');
+        const nightBtn = document.getElementById('night-btn');
+        const container = document.querySelector('.container');
+        
+        dayBtn.addEventListener('click', () => {
+            container.style.background = 'linear-gradient(to bottom, #87CEEB, #E0F7FA)';
+            document.querySelector('.sun').style.opacity = '1';
+        });
+        
+        nightBtn.addEventListener('click', () => {
+            container.style.background = 'linear-gradient(to bottom, #0a1929, #1a3a5f)';
+            document.querySelector('.sun').style.opacity = '0.3';
+        });
+        
+        // Add more crops when clicking
+        const cropsContainer = document.querySelector('.crops');
+        container.addEventListener('click', (e) => {
+            if (e.target === container || e.target.classList.contains('field')) {
+                const crop = document.createElement('div');
+                crop.classList.add('crop');
+                crop.style.animationDelay = `${Math.random() * 8}s`;
+                crop.style.left = `${e.offsetX}px`;
+                cropsContainer.appendChild(crop);
+                
+                // Remove crop after animation completes
+                setTimeout(() => {
+                    crop.remove();
+                }, 8000);
+            }
+        });
+    </script>
+</body>
+</html>

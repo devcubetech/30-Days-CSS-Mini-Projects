@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainy Day Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #1a2980, #26d0ce);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background: linear-gradient(to bottom, #0d1b2a, #1b263b);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title {
+            color: white;
+            margin: 20px 0;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .title h1 {
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .title p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Cloud styling */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            filter: blur(1px);
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Cloud animations */
+        .cloud-1 {
+            top: 20%;
+            left: 5%;
+            width: 120px;
+            height: 40px;
+            animation: float 20s linear infinite;
+        }
+
+        .cloud-1::before {
+            width: 50px;
+            height: 50px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud-1::after {
+            width: 70px;
+            height: 70px;
+            top: -30px;
+            left: 45px;
+        }
+
+        .cloud-2 {
+            top: 15%;
+            right: 10%;
+            width: 150px;
+            height: 50px;
+            animation: float 25s linear infinite reverse;
+        }
+
+        .cloud-2::before {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 20px;
+        }
+
+        .cloud-2::after {
+            width: 80px;
+            height: 80px;
+            top: -35px;
+            left: 60px;
+        }
+
+        .cloud-3 {
+            top: 30%;
+            left: 30%;
+            width: 100px;
+            height: 30px;
+            animation: float 18s linear infinite;
+        }
+
+        .cloud-3::before {
+            width: 40px;
+            height: 40px;
+            top: -15px;
+            left: 10px;
+        }
+
+        .cloud-3::after {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 40px;
+        }
+
+        /* Rain styling */
+        .rain {
+            position: absolute;
+            width: 2px;
+            height: 15px;
+            background: linear-gradient(to bottom, transparent, #5dade2);
+            animation: rainFall linear infinite;
+        }
+
+        /* Ground styling */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #3e2723, #5d4037);
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+
+        .puddles {
+            position: absolute;
+            bottom: 100px;
+            width: 100%;
+            height: 20px;
+        }
+
+        .puddle {
+            position: absolute;
+            bottom: 0;
+            border-radius: 50%;
+            background: rgba(93, 173, 226, 0.3);
+            animation: ripple 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rainFall {
+            0% {
+                transform: translateY(-50px);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(500px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                width: 50px;
+                height: 10px;
+                opacity: 0.5;
+            }
+            100% {
+                width: 80px;
+                height: 15px;
+                opacity: 0;
+            }
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .info {
+            position: absolute;
+            bottom: 70px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            max-width: 80%;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1>Rainy Day Animation</h1>
+            <p>Clouds drifting with falling raindrops</p>
+        </div>
+        
+        <div class="scene" id="scene">
+            <!-- Clouds will be added here -->
+            <!-- Raindrops will be added here -->
+            <div class="puddles" id="puddles"></div>
+            <div class="ground"></div>
+        </div>
+        
+        <div class="info">
+            Click anywhere in the scene to create ripples | Adjust rain intensity with buttons below
+        </div>
+        
+        <div class="controls">
+            <button id="light-rain">Light Rain</button>
+            <button id="medium-rain">Medium Rain</button>
+            <button id="heavy-rain">Heavy Rain</button>
+        </div>
+    </div>
+
+    <script>
+        const scene = document.getElementById('scene');
+        const puddlesContainer = document.getElementById('puddles');
+        
+        // Create clouds
+        for (let i = 1; i <= 3; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = `cloud cloud-${i}`;
+            scene.appendChild(cloud);
+        }
+        
+        // Rain intensity
+        let rainIntensity = 200; // Number of raindrops
+        
+        // Function to create raindrops
+        function createRain() {
+            // Clear existing rain
+            document.querySelectorAll('.rain').forEach(r => r.remove());
+            
+            // Create new rain based on intensity
+            for (let i = 0; i < rainIntensity; i++) {
+                const rain = document.createElement('div');
+                rain.className = 'rain';
+                
+                // Random position and properties
+                const left = Math.random() * 100;
+                const animationDuration = 0.5 + Math.random() * 1.5;
+                const animationDelay = Math.random() * 5;
+                const height = 5 + Math.random() * 15;
+                
+                rain.style.left = `${left}%`;
+                rain.style.height = `${height}px`;
+                rain.style.animationDuration = `${animationDuration}s`;
+                rain.style.animationDelay = `${animationDelay}s`;
+                
+                scene.appendChild(rain);
+            }
+        }
+        
+        // Create puddles on the ground
+        function createPuddles() {
+            puddlesContainer.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const puddle = document.createElement('div');
+                puddle.className = 'puddle';
+                
+                const left = 10 + Math.random() * 80;
+                const size = 30 + Math.random() * 40;
+                const animationDelay = Math.random() * 2;
+                
+                puddle.style.left = `${left}%`;
+                puddle.style.width = `${size}px`;
+                puddle.style.animationDelay = `${animationDelay}s`;
+                
+                puddlesContainer.appendChild(puddle);
+            }
+        }
+        
+        // Create ripple effect when clicking
+        scene.addEventListener('click', (e) => {
+            const rect = scene.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Only create ripples on the ground area
+            if (y > rect.height - 100) {
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.borderRadius = '50%';
+                ripple.style.border = '2px solid rgba(93, 173, 226, 0.5)';
+                ripple.style.animation = 'ripple 1s forwards';
+                
+                scene.appendChild(ripple);
+                
+                // Remove ripple after animation
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            }
+        });
+        
+        // Button event listeners
+        document.getElementById('light-rain').addEventListener('click', () => {
+            rainIntensity = 100;
+            createRain();
+        });
+        
+        document.getElementById('medium-rain').addEventListener('click', () => {
+            rainIntensity = 200;
+            createRain();
+        });
+        
+        document.getElementById('heavy-rain').addEventListener('click', () => {
+            rainIntensity = 350;
+            createRain();
+        });
+        
+        // Initialize
+        createRain();
+        createPuddles();
+    </script>
+</body>
+</html>

@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Playground</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 900px;
+            height: 600px;
+            background: linear-gradient(to bottom, #87CEEB 60%, #4CAF50 60%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #e53935, #e35d5b);
+            color: white;
+            z-index: 100;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* School building */
+        .school {
+            position: absolute;
+            bottom: 40%;
+            left: 50px;
+            width: 300px;
+            height: 200px;
+            background: #FFC107;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 5;
+        }
+
+        .school-roof {
+            position: absolute;
+            top: -30px;
+            left: -10px;
+            width: 320px;
+            height: 40px;
+            background: #e53935;
+            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+        }
+
+        .school-window {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: #81D4FA;
+            border: 3px solid #01579B;
+            border-radius: 5px;
+        }
+
+        .window-1 { top: 40px; left: 30px; }
+        .window-2 { top: 40px; left: 130px; }
+        .window-3 { top: 40px; left: 230px; }
+        .window-4 { top: 120px; left: 30px; }
+        .window-5 { top: 120px; left: 130px; }
+        .window-6 { top: 120px; left: 230px; }
+
+        .school-door {
+            position: absolute;
+            bottom: 0;
+            left: 120px;
+            width: 60px;
+            height: 80px;
+            background: #795548;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .door-knob {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD54F;
+            border-radius: 50%;
+            top: 40px;
+            right: 5px;
+        }
+
+        /* Playground equipment */
+        .slide {
+            position: absolute;
+            bottom: 40%;
+            right: 200px;
+            width: 180px;
+            height: 200px;
+            z-index: 5;
+        }
+
+        .slide-ladder {
+            position: absolute;
+            width: 20px;
+            height: 150px;
+            background: #5D4037;
+            bottom: 0;
+            left: 30px;
+        }
+
+        .slide-top {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background: #FF9800;
+            top: 30px;
+            left: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .slide-ramp {
+            position: absolute;
+            width: 160px;
+            height: 20px;
+            background: #FF9800;
+            top: 50px;
+            left: 20px;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+            transform: rotate(-30deg);
+            transform-origin: top left;
+        }
+
+        .swing {
+            position: absolute;
+            bottom: 40%;
+            right: 50px;
+            width: 120px;
+            height: 180px;
+            z-index: 5;
+        }
+
+        .swing-frame {
+            position: absolute;
+            width: 10px;
+            height: 150px;
+            background: #5D4037;
+            bottom: 0;
+        }
+
+        .frame-left { left: 40px; }
+        .frame-right { left: 80px; }
+
+        .swing-top {
+            position: absolute;
+            width: 50px;
+            height: 10px;
+            background: #5D4037;
+            top: 30px;
+            left: 35px;
+        }
+
+        .swing-seat {
+            position: absolute;
+            width: 40px;
+            height: 10px;
+            background: #8D6E63;
+            top: 110px;
+            left: 40px;
+            border-radius: 5px;
+            animation: swing 3s infinite ease-in-out;
+            transform-origin: top center;
+        }
+
+        /* Children */
+        .child {
+            position: absolute;
+            z-index: 10;
+        }
+
+        /* Child 1 - Jumping */
+        .child-1 {
+            bottom: 45%;
+            left: 400px;
+            animation: jump 2s infinite ease-in-out;
+        }
+
+        .child-1 .head {
+            width: 30px;
+            height: 30px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 10px;
+        }
+
+        .child-1 .body {
+            width: 20px;
+            height: 40px;
+            background: #2196F3;
+            position: absolute;
+            top: 30px;
+            left: 15px;
+        }
+
+        .child-1 .leg {
+            width: 8px;
+            height: 30px;
+            background: #1565C0;
+            position: absolute;
+            top: 70px;
+        }
+
+        .leg-left { left: 15px; transform: rotate(10deg); }
+        .leg-right { left: 27px; transform: rotate(-10deg); }
+
+        /* Child 2 - Running */
+        .child-2 {
+            bottom: 45%;
+            left: 550px;
+            animation: run 4s infinite linear;
+        }
+
+        .child-2 .head {
+            width: 25px;
+            height: 25px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 12px;
+        }
+
+        .child-2 .body {
+            width: 15px;
+            height: 30px;
+            background: #E91E63;
+            position: absolute;
+            top: 25px;
+            left: 17px;
+        }
+
+        .child-2 .arm {
+            width: 6px;
+            height: 25px;
+            background: #E91E63;
+            position: absolute;
+            top: 25px;
+        }
+
+        .arm-left { left: 10px; animation: arm-run-left 0.5s infinite alternate; }
+        .arm-right { left: 33px; animation: arm-run-right 0.5s infinite alternate; }
+
+        .child-2 .leg {
+            width: 6px;
+            height: 25px;
+            background: #AD1457;
+            position: absolute;
+            top: 55px;
+        }
+
+        .leg-left { left: 17px; animation: leg-run-left 0.5s infinite alternate; }
+        .leg-right { left: 27px; animation: leg-run-right 0.5s infinite alternate; }
+
+        /* Child 3 - Playing ball */
+        .child-3 {
+            bottom: 45%;
+            left: 300px;
+            animation: move-ball 6s infinite linear;
+        }
+
+        .child-3 .head {
+            width: 28px;
+            height: 28px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 11px;
+        }
+
+        .child-3 .body {
+            width: 18px;
+            height: 35px;
+            background: #4CAF50;
+            position: absolute;
+            top: 28px;
+            left: 16px;
+        }
+
+        .child-3 .arm {
+            width: 6px;
+            height: 30px;
+            background: #4CAF50;
+            position: absolute;
+            top: 28px;
+        }
+
+        .arm-left { left: 10px; transform: rotate(20deg); }
+        .arm-right { left: 34px; transform: rotate(-20deg); }
+
+        .child-3 .leg {
+            width: 7px;
+            height: 30px;
+            background: #2E7D32;
+            position: absolute;
+            top: 63px;
+        }
+
+        .leg-left { left: 16px; }
+        .leg-right { left: 26px; }
+
+        .ball {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #FF5722;
+            border-radius: 50%;
+            top: 40px;
+            left: -10px;
+            animation: bounce 0.8s infinite alternate;
+        }
+
+        /* Child on swing */
+        .child-4 {
+            bottom: 45%;
+            right: 60px;
+            animation: swing 3s infinite ease-in-out;
+            transform-origin: top center;
+        }
+
+        .child-4 .head {
+            width: 25px;
+            height: 25px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 7px;
+        }
+
+        .child-4 .body {
+            width: 15px;
+            height: 30px;
+            background: #9C27B0;
+            position: absolute;
+            top: 25px;
+            left: 12px;
+        }
+
+        .child-4 .arm {
+            width: 6px;
+            height: 25px;
+            background: #9C27B0;
+            position: absolute;
+            top: 25px;
+        }
+
+        .arm-left { left: 6px; }
+        .arm-right { left: 28px; }
+
+        .child-4 .leg {
+            width: 6px;
+            height: 25px;
+            background: #7B1FA2;
+            position: absolute;
+            top: 55px;
+        }
+
+        .leg-left { left: 12px; }
+        .leg-right { left: 22px; }
+
+        /* Child on slide */
+        .child-5 {
+            bottom: 45%;
+            right: 200px;
+            animation: slide-down 5s infinite ease-in-out;
+        }
+
+        .child-5 .head {
+            width: 22px;
+            height: 22px;
+            background: #FFCCBC;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 9px;
+        }
+
+        .child-5 .body {
+            width: 14px;
+            height: 25px;
+            background: #FF5722;
+            position: absolute;
+            top: 22px;
+            left: 13px;
+        }
+
+        .child-5 .leg {
+            width: 6px;
+            height: 20px;
+            background: #E64A19;
+            position: absolute;
+            top: 47px;
+        }
+
+        .leg-left { left: 13px; }
+        .leg-right { left: 21px; }
+
+        /* Trees and clouds */
+        .tree {
+            position: absolute;
+            bottom: 40%;
+            width: 40px;
+            height: 100px;
+        }
+
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 15px;
+            width: 10px;
+            height: 60px;
+            background: #5D4037;
+            z-index: 5;
+        }
+
+        .tree-top {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 50%;
+            bottom: 40px;
+            left: 0;
+            z-index: 4;
+        }
+
+        .tree-1 { left: 700px; }
+        .tree-2 { left: 800px; }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            filter: blur(1px);
+            z-index: 2;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .cloud-1 {
+            top: 50px;
+            left: 100px;
+            width: 80px;
+            height: 30px;
+            animation: float 25s linear infinite;
+        }
+
+        .cloud-1::before {
+            width: 40px;
+            height: 40px;
+            top: -15px;
+            left: 10px;
+        }
+
+        .cloud-1::after {
+            width: 50px;
+            height: 50px;
+            top: -20px;
+            left: 35px;
+        }
+
+        .cloud-2 {
+            top: 100px;
+            right: 100px;
+            width: 100px;
+            height: 40px;
+            animation: float 30s linear infinite reverse;
+        }
+
+        .cloud-2::before {
+            width: 50px;
+            height: 50px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud-2::after {
+            width: 60px;
+            height: 60px;
+            top: -25px;
+            left: 45px;
+        }
+
+        /* Info and controls */
+        .info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .info-panel h3 {
+            color: #e53935;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #E64A19;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Animations */
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+        }
+
+        @keyframes run {
+            0% { left: 550px; }
+            100% { left: 750px; }
+        }
+
+        @keyframes arm-run-left {
+            0% { transform: rotate(30deg); }
+            100% { transform: rotate(-20deg); }
+        }
+
+        @keyframes arm-run-right {
+            0% { transform: rotate(-20deg); }
+            100% { transform: rotate(30deg); }
+        }
+
+        @keyframes leg-run-left {
+            0% { transform: rotate(20deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        @keyframes leg-run-right {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(20deg); }
+        }
+
+        @keyframes move-ball {
+            0% { left: 300px; }
+            50% { left: 500px; }
+            100% { left: 300px; }
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-30px); }
+        }
+
+        @keyframes swing {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes slide-down {
+            0% { top: 30%; transform: rotate(0); }
+            30% { top: 30%; transform: rotate(0); }
+            100% { top: 60%; transform: rotate(10deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Bell */
+        .bell {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            font-size: 3rem;
+            color: #FFD54F;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            animation: ring 5s infinite;
+            transform-origin: top;
+        }
+
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            10%, 30%, 50%, 70%, 90% { transform: rotate(10deg); }
+            20%, 40%, 60%, 80% { transform: rotate(-10deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-school"></i> School Playground</h1>
+            <p>Children playing during recess - CSS Animation</p>
+        </div>
+
+        <div class="school">
+            <div class="school-roof"></div>
+            <div class="school-window window-1"></div>
+            <div class="school-window window-2"></div>
+            <div class="school-window window-3"></div>
+            <div class="school-window window-4"></div>
+            <div class="school-window window-5"></div>
+            <div class="school-window window-6"></div>
+            <div class="school-door">
+                <div class="door-knob"></div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-ladder"></div>
+            <div class="slide-top"></div>
+            <div class="slide-ramp"></div>
+        </div>
+        
+        <div class="swing">
+            <div class="swing-frame frame-left"></div>
+            <div class="swing-frame frame-right"></div>
+            <div class="swing-top"></div>
+            <div class="swing-seat"></div>
+        </div>
+        
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        
+        <div class="tree tree-1">
+            <div class="tree-trunk"></div>
+            <div class="tree-top"></div>
+        </div>
+        
+        <div class="tree tree-2">
+            <div class="tree-trunk"></div>
+            <div class="tree-top"></div>
+        </div>
+        
+        <div class="bell">
+            <i class="fas fa-bell"></i>
+        </div>
+        
+        <!-- Children -->
+        <div class="child child-1">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+        </div>
+        
+        <div class="child child-2">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm arm-left"></div>
+            <div class="arm arm-right"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+        </div>
+        
+        <div class="child child-3">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm arm-left"></div>
+            <div class="arm arm-right"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+            <div class="ball"></div>
+        </div>
+        
+        <div class="child child-4">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="arm arm-left"></div>
+            <div class="arm arm-right"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+        </div>
+        
+        <div class="child child-5">
+            <div class="head"></div>
+            <div class="body"></div>
+            <div class="leg leg-left"></div>
+            <div class="leg leg-right"></div>
+        </div>
+        
+        <div class="info-panel">
+            <h3><i class="fas fa-info-circle"></i> Playground Activities</h3>
+            <p>Children are engaged in various activities during recess: jumping, running, playing ball, swinging, and sliding. Recess helps children develop social skills and physical coordination.</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="pause-btn">
+                <i class="fas fa-pause"></i> Pause
+            </button>
+            <button class="btn" id="play-btn">
+                <i class="fas fa-play"></i> Play
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const pauseBtn = document.getElementById('pause-btn');
+        const playBtn = document.getElementById('play-btn');
+        const animations = document.querySelectorAll('*');
+        
+        pauseBtn.addEventListener('click', () => {
+            animations.forEach(el => {
+                if (el.style.animationPlayState !== 'paused') {
+                    el.style.animationPlayState = 'paused';
+                }
+            });
+        });
+        
+        playBtn.addEventListener('click', () => {
+            animations.forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+        });
+        
+        // Add more children when clicking
+        const container = document.querySelector('.container');
+        container.addEventListener('click', (e) => {
+            if (e.target === container) {
+                const child = document.createElement('div');
+                child.className = 'child';
+                
+                // Random child position
+                const left = Math.random() * 800;
+                const bottom = 45 + Math.random() * 10;
+                
+                // Random child color
+                const colors = ['#2196F3', '#E91E63', '#4CAF50', '#9C27B0', '#FF5722'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                child.style.left = `${left}px`;
+                child.style.bottom = `${bottom}%`;
+                
+                // Create child HTML
+                child.innerHTML = `
+                    <div class="head"></div>
+                    <div class="body" style="background: ${color}"></div>
+                    <div class="arm arm-left" style="background: ${color}"></div>
+                    <div class="arm arm-right" style="background: ${color}"></div>
+                    <div class="leg leg-left" style="background: ${color.replace(')', ', 0.8)').replace('rgb', 'rgba')}"></div>
+                    <div class="leg leg-right" style="background: ${color.replace(')', ', 0.8)').replace('rgb', 'rgba')}"></div>
+                `;
+                
+                // Add animation
+                const animations = ['jump', 'run', 'move-ball'];
+                const animation = animations[Math.floor(Math.random() * animations.length)];
+                child.style.animation = `${animation} ${3 + Math.random() * 5}s infinite ease-in-out`;
+                
+                container.appendChild(child);
+                
+                // Remove after a while
+                setTimeout(() => {
+                    child.remove();
+                }, 15000);
+            }
+        });
+    </script>
+</body>
+</html>
